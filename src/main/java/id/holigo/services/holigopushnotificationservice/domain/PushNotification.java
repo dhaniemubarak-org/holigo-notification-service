@@ -46,8 +46,10 @@ public class PushNotification {
 
     private String description;
 
-    private String route;
+    private String topic;
 
     @Lob
-    private String token;
+    private String data;
+
+    private String imageUrl;
 }

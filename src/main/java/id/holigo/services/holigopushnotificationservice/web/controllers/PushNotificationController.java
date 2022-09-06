@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/pushNotification")
+@RequestMapping("/api/v1/pushNotifications")
 public class PushNotificationController {
 
     private static final Integer DEFAULT_PAGE_NUMBER = 0;

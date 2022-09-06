@@ -7,5 +7,5 @@ import org.mapstruct.Mapper;
 public interface PushNotificationMapper {
     PushNotificationDto pushNotificationToPushNotificationDto(PushNotification pushNotification);
 
-    PushNotification pushNotificationDtoToPushnotification(PushNotificationDto pushNotificationDto);
+    PushNotification pushNotificationDtoToPushNotification(PushNotificationDto pushNotificationDto);
 }

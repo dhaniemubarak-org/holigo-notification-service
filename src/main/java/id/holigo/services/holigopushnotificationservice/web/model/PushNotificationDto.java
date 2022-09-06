@@ -39,11 +39,14 @@ public class PushNotificationDto {
     private String title;
 
     private String description;
+    
+    private String data;
 
-    private String route;
-
-    @Lob
     private String token;
+
+    private String topic;
+
+    private String imageUrl;
 
 
 }

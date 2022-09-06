@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class PushNotificationServiceImpl implements PushNotificationService{
+public class PushNotificationServiceImpl implements PushNotificationService {
 
     private PushNotificationRepository pushNotificationRepository;
 
@@ -45,15 +45,15 @@ public class PushNotificationServiceImpl implements PushNotificationService{
 
 
     @Override
-    public PushNotifcationPagedList listPushNotification(Long userId,PushNotificationCategoryEnum category, PageRequest pageRequest) {
+    public PushNotifcationPagedList listPushNotification(Long userId, PushNotificationCategoryEnum category, PageRequest pageRequest) {
 
         PushNotifcationPagedList pushNotifcationPagedList;
 
         Page<PushNotification> pushNotificationPage;
 
-        if (category != null){
-            pushNotificationPage = pushNotificationRepository.findAllByCategoryAndUserId(category, userId , pageRequest);
-        }else {
+        if (category != null) {
+            pushNotificationPage = pushNotificationRepository.findAllByCategoryAndUserId(category, userId, pageRequest);
+        } else {
             pushNotificationPage = pushNotificationRepository.findAllByUserId(userId, pageRequest);
         }
 
@@ -71,15 +71,19 @@ public class PushNotificationServiceImpl implements PushNotificationService{
     }
 
     @Override
-    public PushNotificationDto postPushNotification(PushNotificationDto pushNotificationDto){
-        PushNotification pushNotification = pushNotificationRepository.save(pushNotificationMapper.pushNotificationDtoToPushnotification(pushNotificationDto));
-        try{
-            if (pushNotification.getId() != null){
+    public PushNotificationDto postPushNotification(PushNotificationDto pushNotificationDto) {
+        PushNotification pushNotification = pushNotificationRepository.save(pushNotificationMapper.pushNotificationDtoToPushNotification(pushNotificationDto));
+        try {
+            if (pushNotification.getId() != null) {
                 // send to firebase
-                firebaseMessagingService.sendNotification(pushNotification.getTitle(), pushNotification.getDescription(), pushNotification.getToken());
+                if (pushNotification.getTopic() != null) {
+                    firebaseMessagingService.sendNotificationByTopic(pushNotification);
+                } else {
+                    firebaseMessagingService.sendNotificationByToken(pushNotification, pushNotificationDto.getToken());
+                }
                 return pushNotificationMapper.pushNotificationToPushNotificationDto(pushNotification);
             }
-        } catch (FirebaseMessagingException e){
+        } catch (FirebaseMessagingException e) {
             log.error("Token not found...");
         }
         return pushNotificationMapper.pushNotificationToPushNotificationDto(pushNotification);
@@ -87,15 +91,13 @@ public class PushNotificationServiceImpl implements PushNotificationService{
 
     // Read Notification
     @Override
-    public PushNotificationDto putPushNotification(UUID id){
+    public PushNotificationDto putPushNotification(UUID id) {
         PushNotification notificationRead = pushNotificationRepository.findById(id);
 
         notificationRead.setReadAt(Timestamp.valueOf(LocalDateTime.now()));
 
         return pushNotificationMapper.pushNotificationToPushNotificationDto(pushNotificationRepository.save(notificationRead));
     }
-
-
 
 
 }
