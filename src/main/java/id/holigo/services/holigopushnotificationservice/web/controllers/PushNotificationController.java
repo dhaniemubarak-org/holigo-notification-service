@@ -26,7 +26,7 @@ public class PushNotificationController {
 
 
     @GetMapping(produces = "application/json")
-    public ResponseEntity<PushNotifcationPagedList> ListPushNotification(@RequestParam(value = "Page-number", required = false) Integer pageNumber,
+    public ResponseEntity<PushNotifcationPagedList> ListPushNotification(@RequestParam(value = "pageNumber", required = false) Integer pageNumber,
                                                                          @RequestParam(value = "pageSize", required = false) Integer pageSize,
                                                                          @RequestParam(value = "category",required = false) PushNotificationCategoryEnum category,
                                                                          @RequestHeader(value = "user-id") Long userId
